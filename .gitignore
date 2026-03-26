@@ -1,0 +1,9 @@
+﻿# Visual Studio folders
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# Rider folders (ako se ikad koristi JetBrains)
+.idea/
