@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "command": "powershell.exe -ExecutionPolicy Bypass -File '.github/hooks/log_hook.ps1' -jsonInput \"$input\""
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "powershell.exe -ExecutionPolicy Bypass -File '.github/hooks/log_hook.ps1' -jsonInput \"$input\""
+      }
+    ]
+  }
+}
