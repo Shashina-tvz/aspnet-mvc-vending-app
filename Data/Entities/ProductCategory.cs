@@ -1,4 +1,4 @@
-namespace VendingMachineApp.Models
+namespace VendingMachineApp.Data.Entities
 {
     /// <summary>
     /// Enum representing product categories available in vending machines

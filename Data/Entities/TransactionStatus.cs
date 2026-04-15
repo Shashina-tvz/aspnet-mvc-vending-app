@@ -1,4 +1,4 @@
-namespace VendingMachineApp.Models
+namespace VendingMachineApp.Data.Entities
 {
     /// <summary>
     /// Enum representing the status of a vending machine transaction
