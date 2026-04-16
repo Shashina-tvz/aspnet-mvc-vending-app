@@ -16,9 +16,9 @@ namespace VendingMachineApp.Data.Repositories
         public List<MaintenanceLog> GetAll() => logs;
         public List<MaintenanceLog> GetByMachineId(int machineId) => logs.Where(x => x.MachineId == machineId).ToList();
 
-        public MaintenanceLog GetById(int id)
+        public MaintenanceLog? GetById(int id)
         {
-            return logs.FirstOrDefault(x => x.MaintenanceLogId == id) ?? new MaintenanceLog();
+            return logs.FirstOrDefault(x => x.MaintenanceLogId == id);
         }
     }
 }

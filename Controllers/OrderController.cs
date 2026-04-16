@@ -16,9 +16,9 @@ namespace VendingMachineApp.Controllers
             _orderItemRepo = orderItemRepo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string status)
         {
-            var orders = _orderRepo.GetAll();
+            var orders = !string.IsNullOrEmpty(status) ? _orderRepo.GetByStatus(status) : _orderRepo.GetAll();
             return View(orders);
         }
 

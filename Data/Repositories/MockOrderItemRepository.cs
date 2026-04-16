@@ -15,11 +15,11 @@ namespace VendingMachineApp.Data.Repositories
             new OrderItem { OrderItemId = 5, Quantity = 6, UnitPrice = 2.2m, SubTotal = 13.2m, OrderId = 5, ProductId = 10 }
         };
         public List<OrderItem> GetAll() => items;
-        public OrderItem GetByOrderItemId(int id) => items.FirstOrDefault(x => x.OrderItemId == id);
+        
 
-        public OrderItem GetById(int id)
+        public OrderItem? GetById(int id)
         {
-            return items.FirstOrDefault(x => x.OrderItemId == id) ?? new OrderItem();
+            return items.FirstOrDefault(x => x.OrderItemId == id);
         }
     }
 }

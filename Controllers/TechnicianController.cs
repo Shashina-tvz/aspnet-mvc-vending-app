@@ -14,16 +14,19 @@ namespace VendingMachineApp.Controllers
             _technicianRepo = technicianRepo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string name)
         {
-            var technicians = _technicianRepo.GetAll();
+            var technicians = !string.IsNullOrEmpty(name) 
+            ? _technicianRepo.GetByName(name) 
+            : _technicianRepo.GetAll();
             return View(technicians);
         }
 
         public IActionResult Details(int id)
         {
             var technician = _technicianRepo.GetById(id);
-            if (technician == null) return NotFound();
+            if (technician == null)
+                return NotFound();
             return View(technician);
         }
     }

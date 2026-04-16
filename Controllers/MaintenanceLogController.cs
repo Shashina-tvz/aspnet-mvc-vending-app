@@ -16,17 +16,22 @@ namespace VendingMachineApp.Controllers
             _machineRepo = machineRepo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? machineId)
         {
-            var logs = _logRepo.GetAll();
+            var logs = machineId.HasValue 
+            ? _logRepo.GetByMachineId(machineId.Value) 
+            : _logRepo.GetAll();
             return View(logs);
         }
 
-        public IActionResult Details(int id)
+         public IActionResult Details(int id)
         {
             var log = _logRepo.GetById(id);
-            if (log == null) return NotFound();
-            log.VendingMachine = _machineRepo.GetById(log.MachineId);
+            if (log == null)
+                return NotFound();
+
+            log.VendingMachine = _machineRepo.GetById(log.MachineId);         
+             
             return View(log);
         }
     }

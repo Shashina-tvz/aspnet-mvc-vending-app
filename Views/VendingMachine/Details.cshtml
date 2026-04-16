@@ -1,0 +1,53 @@
+@model VendingMachineApp.Data.Entities.VendingMachine
+@{
+    ViewData["Title"] = "Vending Machine Details";
+    Layout = "../Shared/_Layout.cshtml";
+}
+<style>
+    .details-panel {
+        background: #23272f;
+        color: #f3f3f3;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        padding: 2.5rem 2.5rem 2rem 2.5rem;
+        max-width: 540px;
+        margin: 2rem auto;
+    }
+    .details-section { margin-bottom: 1.5rem; }
+    .details-label { color: #b0b3b8; font-size: 0.98rem; margin-bottom: 0.2rem; }
+    .details-value { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.7rem; }
+    .back-link { color: #4fc3f7; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+</style>
+<div class="details-panel">
+    <h2 style="margin-bottom:1.5rem;">Vending Machine Details</h2>
+    <div class="details-section">
+        <div class="details-label">Machine Number</div>
+        <div class="details-value">@Model.MachineNumber</div>
+    </div>
+    <div class="details-section">
+        <div class="details-label">Status</div>
+        <div class="details-value">@Model.Status</div>
+    </div>
+    <div class="details-section">
+        <div class="details-label">Address</div>
+        <div class="details-value">@Model.Address</div>
+    </div>
+    <div class="details-section">
+        <div class="details-label">Capacity</div>
+        <div class="details-value">@Model.Capacity</div>
+    </div>
+    <div class="details-section">
+        <div class="details-label">Current Balance</div>
+        <div class="details-value">@Model.CurrentBalance.ToString("C")</div>
+    </div>
+    <div class="details-section">
+        <div class="details-label">Manufactured</div>
+        <div class="details-value">@Model.ManufacturedDate.ToShortDateString()</div>
+    </div>
+    <div class="details-section">
+        <div class="details-label">Last Maintenance</div>
+        <div class="details-value">@Model.LastMaintenanceDate.ToShortDateString()</div>
+    </div>
+    <a class="back-link" href="/VendingMachine/Index">&#8592; Back to List</a>
+</div>

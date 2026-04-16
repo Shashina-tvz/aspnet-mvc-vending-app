@@ -16,9 +16,9 @@ namespace VendingMachineApp.Data.Repositories
         public List<Transaction> GetAll() => transactions;
         public List<Transaction> GetByTransactionDate(DateTime date) => transactions.Where(x => x.TransactionDate.Date == date.Date).ToList();
 
-        public Transaction GetById(int id)
+        public Transaction? GetById(int id)
         {
-            return transactions.FirstOrDefault(x => x.TransactionId == id) ?? new Transaction();
+            return transactions.FirstOrDefault(x => x.TransactionId == id);
         }
     }
 }

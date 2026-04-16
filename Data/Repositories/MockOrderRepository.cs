@@ -17,9 +17,9 @@ namespace VendingMachineApp.Data.Repositories
         public List<Order> GetAll() => orders;
         public List<Order> GetByStatus(string status) => orders.Where(x => x.Status == status).ToList();
 
-        public Order GetById(int id)
+        public Order? GetById(int id)
         {
-            return orders.FirstOrDefault(x => x.OrderId == id) ?? new Order();
+            return orders.FirstOrDefault(x => x.OrderId == id);
         }
     }
 }

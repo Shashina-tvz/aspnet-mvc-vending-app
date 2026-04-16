@@ -1,0 +1,50 @@
+@model IEnumerable<VendingMachineApp.Data.Entities.Technician>
+
+@{
+    ViewData["Title"] = "Technicians";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<style>
+    .card-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
+
+    .tech-card {
+        background: #23272f;
+        color: #f3f3f3;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 1.5rem 2rem;
+        min-width: 260px;
+        max-width: 320px;
+        flex: 1 1 260px;
+        margin-bottom: 1.5rem;
+        transition: box-shadow 0.2s, background 0.2s;
+        cursor: pointer;
+        text-decoration: none;
+        border: 1px solid #2e323a;
+    }
+
+    .tech-card:hover {
+        background: #2e323a;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+        border-color: #3a3f4b;
+    }
+
+    .tech-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .tech-meta { font-size: 0.95rem; color: #b0b3b8; margin-bottom: 0.25rem; }
+</style>
+
+<h1>Technicians</h1>
+
+<div class="card-grid">
+@foreach (var tech in Model)
+{
+    <a class="tech-card" href="/Technician/Details/@tech.TechnicianId">
+        <div class="tech-title">@tech.Name</div>
+        <div class="tech-meta">License: @tech.LicenseNumber</div>
+        <div class="tech-meta">@tech.Email</div>
+        <div class="tech-meta">@tech.PhoneNumber</div>
+        <div class="tech-meta">Hired: @tech.HireDate.ToString("dd.MM.yyyy")</div>
+    </a>
+}
+</div>

@@ -1,0 +1,48 @@
+@model IEnumerable<VendingMachineApp.Data.Entities.Order>
+
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<style>
+    .card-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
+
+    .order-card {
+        background: #23272f;
+        color: #f3f3f3;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 1.5rem 2rem;
+        min-width: 260px;
+        max-width: 320px;
+        flex: 1 1 260px;
+        margin-bottom: 1.5rem;
+        transition: box-shadow 0.2s, background 0.2s;
+        cursor: pointer;
+        text-decoration: none;
+        border: 1px solid #2e323a;
+    }
+
+    .order-card:hover {
+        background: #2e323a;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+        border-color: #3a3f4b;
+    }
+
+    .order-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .order-meta { font-size: 0.95rem; color: #b0b3b8; margin-bottom: 0.25rem; }
+</style>
+
+<h1>Orders</h1>
+
+<div class="card-grid">
+@foreach (var order in Model)
+{
+    <a class="order-card" href="/Order/Details/@order.OrderId">
+        <div class="order-title">Order #@order.OrderId</div>
+        <div class="order-meta">Status: @order.Status</div>
+        <div class="order-meta">Items: @(order.OrderItems?.Count ?? 0)</div>
+    </a>
+}
+</div>

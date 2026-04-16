@@ -1,49 +1,217 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using VendingMachineApp.Data.Repositories
+@inject MockProductRepository productRepo
+@inject MockSupplierRepository supplierRepo
+@inject VendingMachineApp.Data.Repositories.MockVendingMachineRepository machineRepo
+@inject VendingMachineApp.Data.Repositories.MockOrderRepository orderRepo
+@inject VendingMachineApp.Data.Repositories.MockMaintenanceLogRepository logRepo
+@inject VendingMachineApp.Data.Repositories.MockTechnicianRepository techRepo
+
+@{
+    var products = productRepo.GetAll().ToList();
+    var suppliers = supplierRepo.GetAll().ToList();
+   var machines = machineRepo.GetAll().ToList();
+    var orders = orderRepo.GetAll().ToList();
+    var logs = logRepo.GetAll().ToList();
+    var technicians = techRepo.GetAll().ToList();
+}
+
+
+<!DOCTYPE html>
+
+<html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - VendingMachineApp</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VendingMachineApp.styles.css" asp-append-version="true" />
+
+```
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #1b1e24;
+        color: #f3f3f3;
+        display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 240px;
+        background: #23272f;
+        height: 100vh;
+        padding: 1.5rem;
+        box-sizing: border-box;
+        position: fixed;
+    }
+
+    .sidebar h2 {
+        color: #4fc3f7;
+        margin-bottom: 2rem;
+    }
+
+    .nav-link {
+        display: block;
+        color: #f3f3f3;
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        transition: 0.2s;
+    }
+
+    .nav-link:hover {
+        background: #2e323a;
+    }
+
+    /* CONTENT */
+    .content {
+        margin-left: 240px;
+        padding: 2rem;
+        width: 100%;
+    }
+
+    /* FLYOUT MENU */
+    .nav-item {
+        position: relative;
+    }
+
+    .flyout {
+        position: absolute;
+        left: 100%;
+        top: 0;
+
+        background: #23272f;
+        border-radius: 10px;
+        padding: 10px;
+
+        display: none;
+        flex-direction: column;
+
+        min-width: 220px;
+        max-height: 300px;
+        overflow-y: auto;
+
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .flyout a {
+        color: #b0b3b8;
+        text-decoration: none;
+        padding: 8px 10px;
+        border-radius: 6px;
+    }
+
+    .flyout a:hover {
+        background: #2e323a;
+        color: white;
+    }
+
+    .nav-item:hover .flyout {
+        display: flex;
+    }
+
+    /* SCROLLBAR */
+    .flyout::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .flyout::-webkit-scrollbar-thumb {
+        background: #4fc3f7;
+        border-radius: 10px;
+    }
+</style>
+```
+
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VendingMachineApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+```
+<div class="sidebar">
+    <h2>Vending App</h2>
+
+    <a class="nav-link" href="/Dashboard">Dashboard</a>
+
+    <!-- PRODUCTS -->
+    <div class="nav-item">
+        <a class="nav-link" href="/Product">Products</a>
+
+        <div class="flyout">
+            @foreach (var p in products)
+            {
+                <a href="/Product/Details/@p.ProductId">@p.Name</a>
+            }
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - VendingMachineApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- SUPPLIERS -->
+    <div class="nav-item">
+        <a class="nav-link" href="/Supplier">Suppliers</a>
+
+        <div class="flyout">
+            @foreach (var s in suppliers)
+            {
+                <a href="/Supplier/Details/@s.SupplierId">@s.Name</a>
+            }
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    </div>
+
+ <!-- VENDING MACHINES -->
+   <div class="nav-item">
+    <a class="nav-link" href="/VendingMachine">Machines</a>
+
+    <div class="flyout">
+        @foreach (var m in machines)
+        {
+            <a href="/VendingMachine/Details/@m.MachineId">Machine @m.MachineNumber</a>
+        }
+    </div>
+</div>
+
+<!-- ORDERS -->
+    <div class="nav-item">
+    <a class="nav-link" href="/Order">Orders</a>
+
+    <div class="flyout">
+        @foreach (var o in orders)
+        {
+            <a href="/Order/Details/@o.OrderId">Order #@o.OrderId</a>
+        }
+    </div>
+</div>
+
+<!-- MAINTENANCE LOGS -->
+    <div class="nav-item">
+    <a class="nav-link" href="/MaintenanceLog">Maintenance</a>
+
+    <div class="flyout">
+        @foreach (var l in logs)
+        {
+            <a href="/MaintenanceLog/Details/@l.MaintenanceLogId">
+                @l.Status - @l.MaintenanceDate.ToShortDateString()
+            </a>
+        }
+    </div>
+</div>
+
+<!-- TECHNICIANS -->
+    <div class="nav-item">
+    <a class="nav-link" href="/Technician">Technicians</a>
+
+    <div class="flyout">
+        @foreach (var t in technicians)
+        {
+            <a href="/Technician/Details/@t.TechnicianId">@t.Name</a>
+        }
+    </div>
+</div>
+</div>
+
+<div class="content">
+    @RenderBody()
+</div>
+```
+
 </body>
 </html>
+

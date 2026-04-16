@@ -1,0 +1,68 @@
+@model VendingMachineApp.Data.Entities.MaintenanceLog
+
+@{
+    ViewData["Title"] = "Maintenance Log Details";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<style>
+    .details-panel {
+        background: #23272f;
+        color: #f3f3f3;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        padding: 2.5rem;
+        max-width: 540px;
+        margin: 2rem auto;
+    }
+
+    .details-section { margin-bottom: 1.5rem; }
+    .details-label { color: #b0b3b8; font-size: 0.98rem; margin-bottom: 0.2rem; }
+    .details-value { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.7rem; }
+</style>
+
+<div class="details-panel">
+    <h2 style="margin-bottom:1.5rem;">Maintenance Log Details</h2>
+
+    <div class="details-section">
+        <div class="details-label">Description</div>
+        <div class="details-value">@Model.Description</div>
+    </div>
+
+    <div class="details-section">
+        <div class="details-label">Date</div>
+        <div class="details-value">@Model.MaintenanceDate.ToString("dd.MM.yyyy")</div>
+    </div>
+
+    <div class="details-section">
+        <div class="details-label">Cost</div>
+        <div class="details-value">@Model.Cost.ToString("C")</div>
+    </div>
+
+    <div class="details-section">
+        <div class="details-label">Status</div>
+        <div class="details-value">@Model.Status</div>
+    </div>
+
+    <div class="details-section">
+        <div class="details-label">Machine ID</div>
+        <div class="details-value">@Model.MachineId</div>
+    </div>
+
+    <div class="details-section">
+        <div class="details-label">Technician ID</div>
+        <div class="details-value">@Model.TechnicianId</div>
+    </div>
+
+    <div class="details-section">
+        <div class="details-label">Machine</div>
+        <div class="details-value">@Model.VendingMachine?.MachineNumber</div>
+    </div>
+
+    <div class="details-section">
+        <div class="details-label">Technician</div>
+        <div class="details-value">@Model.Technician?.Name</div>
+    </div>
+
+    <a class="back-link" href="/MaintenanceLog/Index">&#8592; Back to List</a>
+</div>

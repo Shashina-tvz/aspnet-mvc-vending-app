@@ -46,11 +46,16 @@ namespace VendingMachineApp.Data.Repositories
             }
         };
         public List<Supplier> GetAll() => suppliers;
-        public Supplier GetByName(string name) => suppliers.FirstOrDefault(x => x.Name == name)?? new Supplier();
-
-        public Supplier GetById(int id)
+        
+        public List<Supplier> GetByName(string name)
         {
-            return suppliers.FirstOrDefault(x => x.SupplierId == id) ?? new Supplier();
+            return suppliers
+                .Where(x => x.Name.Contains(name))
+                .ToList();
+        }
+        public Supplier? GetById(int id)
+        {
+            return suppliers.FirstOrDefault(x => x.SupplierId == id);
         }
     }
 }

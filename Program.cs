@@ -1,7 +1,18 @@
+using VendingMachineApp.Data.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<MockProductRepository>();
+builder.Services.AddSingleton<MockSupplierRepository>();
+builder.Services.AddSingleton<MockVendingMachineRepository>();
+builder.Services.AddSingleton<MockOrderRepository>();
+builder.Services.AddSingleton<MockOrderItemRepository>();
+builder.Services.AddSingleton<MockTechnicianRepository>();
+builder.Services.AddSingleton<MockTransactionRepository>();
+builder.Services.AddSingleton<MockMaintenanceLogRepository>();
 
 var app = builder.Build();
 
@@ -19,6 +30,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=DashBoard}/{action=Index}/{id?}");
 
 app.Run();

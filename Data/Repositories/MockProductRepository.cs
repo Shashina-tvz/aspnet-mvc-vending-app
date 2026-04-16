@@ -29,9 +29,9 @@ namespace VendingMachineApp.Data.Repositories
         public List<Product> GetAll() => products;
         public List<Product> GetByCategory(ProductCategory category) => products.Where(x => x.Category == category).ToList();
 
-        public Product GetById(int id)
+        public Product? GetById(int id)
         {
-            return products.FirstOrDefault(x => x.ProductId == id) ?? new Product();
+            return products.FirstOrDefault(x => x.ProductId == id);
         }
     }
 }

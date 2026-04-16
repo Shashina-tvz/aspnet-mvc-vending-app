@@ -1,0 +1,42 @@
+@model IEnumerable<VendingMachineApp.Data.Entities.Supplier>
+@{
+    ViewData["Title"] = "Suppliers";
+    Layout = "../Shared/_Layout.cshtml";
+}
+<style>
+    .card-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
+    .supplier-card {
+        background: #23272f;
+        color: #f3f3f3;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 1.5rem 2rem;
+        min-width: 260px;
+        max-width: 320px;
+        flex: 1 1 260px;
+        margin-bottom: 1.5rem;
+        transition: box-shadow 0.2s, background 0.2s;
+        cursor: pointer;
+        text-decoration: none;
+        border: 1px solid #2e323a;
+    }
+    .supplier-card:hover {
+        background: #2e323a;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+        border-color: #3a3f4b;
+    }
+    .supplier-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .supplier-meta { font-size: 0.95rem; color: #b0b3b8; margin-bottom: 0.25rem; }
+</style>
+<h1>Suppliers</h1>
+<div class="card-grid">
+@foreach (var supplier in Model)
+{
+    <a class="supplier-card" href="/Supplier/Details/@supplier.SupplierId">
+        <div class="supplier-title">@supplier.Name</div>
+        <div class="supplier-meta">Contact: @supplier.ContactPerson</div>
+        <div class="supplier-meta">Phone: @supplier.PhoneNumber</div>
+        <div class="supplier-meta">Email: @supplier.Email</div>
+    </a>
+}
+</div>

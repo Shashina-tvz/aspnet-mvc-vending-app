@@ -16,11 +16,11 @@ namespace VendingMachineApp.Data.Repositories
             new VendingMachine { MachineId = 6, MachineNumber = 106, Address = "Adresa 6", Capacity = 80, Status = MachineStatus.Active, ManufacturedDate = DateTime.Now.AddYears(-6), LastMaintenanceDate = DateTime.Now.AddMonths(-6), CurrentBalance = 500.0m }
         };
         public List<VendingMachine> GetAll() => machines;
-        public VendingMachine GetByMachineNumber(int machineNumber) => machines.FirstOrDefault(x => x.MachineNumber == machineNumber)?? new VendingMachine();
+        public VendingMachine? GetByMachineNumber(int machineNumber) => machines.FirstOrDefault(x => x.MachineNumber == machineNumber);
 
-        public VendingMachine GetById(int id)
+        public VendingMachine? GetById(int id)
         {
-            return machines.FirstOrDefault(x => x.MachineId == id) ?? new VendingMachine();
+            return machines.FirstOrDefault(x => x.MachineId == id);
         }
     }
 }

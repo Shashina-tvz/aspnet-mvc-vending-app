@@ -15,9 +15,9 @@ namespace VendingMachineApp.Data.Repositories
         public List<Technician> GetAll() => technicians;
         public List<Technician> GetByName(string name) => technicians.Where(x => x.Name.Contains(name)).ToList();
 
-        public Technician GetById(int id)
+        public Technician? GetById(int id)
         {
-            return technicians.FirstOrDefault(x => x.TechnicianId == id) ?? new Technician();
+            return technicians.FirstOrDefault(x => x.TechnicianId == id);
         }
     }
 }

@@ -14,9 +14,11 @@ namespace VendingMachineApp.Controllers
             _transactionRepo = transactionRepo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(DateTime? date)
         {
-            var transactions = _transactionRepo.GetAll();
+            var transactions = date.HasValue 
+            ? _transactionRepo.GetByTransactionDate(date.Value) 
+            : _transactionRepo.GetAll();
             return View(transactions);
         }
 

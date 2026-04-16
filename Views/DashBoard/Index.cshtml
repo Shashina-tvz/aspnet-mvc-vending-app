@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+    }
+
+    .card {
+        background: #23272f;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid #2e323a;
+    }
+
+    .card h2 {
+        margin: 0;
+        color: #4fc3f7;
+    }
+
+    .quick-links {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .link-card {
+        background: #2e323a;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .link-card:hover {
+        background: #3a3f4b;
+    }
+</style>
+
+<h1>Dashboard Overview</h1>
+
+<div class="grid">
+    <div class="card" onclick="location.href='/Product'" style="cursor: pointer;">
+        <h2>@ViewBag.ProductCount</h2>
+        <p>Products</p>
+    </div>
+
+    <div class="card" onclick="location.href='/Supplier'" style="cursor: pointer;">
+        <h2>@ViewBag.SupplierCount</h2>
+        <p>Suppliers</p>
+    </div>
+
+    <div class="card" onclick="location.href='/VendingMachine'" style="cursor: pointer;">
+        <h2>@ViewBag.MachineCount</h2>
+        <p>Machines</p>
+    </div>
+
+    <div class="card" onclick="location.href='/Order'" style="cursor: pointer;">
+        <h2>@ViewBag.OrderCount</h2>
+        <p>Orders</p>
+    </div>
+
+    <div class="card" onclick="location.href='/MaintenanceLog'" style="cursor: pointer;">
+        <h2>@ViewBag.MaintenanceCount</h2>
+        <p>Maintenance</p>
+    </div>
+
+    <div class="card" onclick="location.href='/Technician'" style="cursor: pointer;">
+        <h2>@ViewBag.TechCount</h2>
+        <p>Technicians</p>
+    </div>
+</div>
+

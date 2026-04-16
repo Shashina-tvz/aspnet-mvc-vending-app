@@ -23,7 +23,8 @@ namespace VendingMachineApp.Controllers
         public IActionResult Details(int id)
         {
             var item = _orderItemRepo.GetById(id);
-            if (item == null) return NotFound();
+            if (item == null)
+                return NotFound();
             return View(item);
         }
     }

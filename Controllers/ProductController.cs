@@ -16,9 +16,11 @@ namespace VendingMachineApp.Controllers
             _supplierRepo = supplierRepo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(ProductCategory? category)
         {
-            var products = _productRepo.GetAll();
+            var products = category.HasValue 
+            ? _productRepo.GetByCategory(category.Value) 
+            : _productRepo.GetAll();
             return View(products);
         }
 
