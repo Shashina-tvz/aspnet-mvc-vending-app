@@ -4,6 +4,11 @@
     Layout = "../Shared/_Layout.cshtml";
 }
 <style>
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+    }
     .card-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
     .supplier-card {
         background: #23272f;
@@ -27,8 +32,65 @@
     }
     .supplier-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
     .supplier-meta { font-size: 0.95rem; color: #b0b3b8; margin-bottom: 0.25rem; }
+
+   .search-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 1.5rem;
+    }
+
+    .search-inner {
+        position: relative;
+        width: 100%;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px 14px 10px 38px;
+        border-radius: 8px;
+        border: 1px solid #2e323a;
+        background: #23272f;
+        color: #f3f3f3;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none;
+    }
 </style>
+
+<div class="page-container">
+<div class="breadcrumb-container">
+    <div class="breadcrumb">
+        <a href="/Dashboard">Home</a>
+        <span class="breadcrumb-separator">›</span>
+        <span>Suppliers</span>
+    </div>
+</div>
 <h1>Suppliers</h1>
+
+<form method="get" action="/Supplier" class="search-wrapper">
+
+    <div class="search-inner">
+        <span class="search-icon">🔍</span>
+
+        <input type="text"
+               name="search"
+               placeholder="Name of Supplier"
+               value="@Context.Request.Query["search"]"
+               autocomplete="off"
+               oninput="handleSearch(this)"
+               class="search-input" />
+    </div>
+
+</form>
+
 <div class="card-grid">
 @foreach (var supplier in Model)
 {
@@ -40,3 +102,17 @@
     </a>
 }
 </div>
+
+</div>
+
+<script>
+let timer;
+
+function handleSearch(input) {
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+        input.form.submit();
+    }, 1500);
+}
+</script>

@@ -4,15 +4,22 @@ namespace VendingMachineApp.Data.Entities
     /// Complex class representing a vending machine
     /// 1-N relationship with ProductSlot and Transaction
     /// </summary>
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     public class VendingMachine
     {
+        [Key]
         public int MachineId { get; set; }
         public int MachineNumber { get; set; }
+        [Required]
+        [MaxLength(200)]
         public string Address { get; set; } = string.Empty;
         public int Capacity { get; set; }
+        [Required]
         public MachineStatus Status { get; set; }
         public DateTime ManufacturedDate { get; set; }
         public DateTime LastMaintenanceDate { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal CurrentBalance { get; set; }
         // Navigation Properties
         public virtual ICollection<ProductSlot>? ProductSlots { get; set; } = new List<ProductSlot>();

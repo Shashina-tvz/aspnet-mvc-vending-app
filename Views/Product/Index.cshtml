@@ -28,11 +28,19 @@
     .product-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
     .product-meta { font-size: 0.95rem; color: #b0b3b8; margin-bottom: 0.25rem; }
 </style>
+
+<div class="breadcrumb-container">
+    <div class="breadcrumb">
+        <a href="/Dashboard">Home</a>
+        <span class="breadcrumb-separator">›</span>
+        <span>Products</span>
+    </div>
+</div>
 <h1>Products</h1>
 <div class="card-grid">
 @foreach (var product in Model)
 {
-    <a class="product-card" href="/Product/Details/@product.ProductId">
+    <a class="product-card" href="/products/info/@product.ProductId">
         <div class="product-title">@product.Name</div>
         <div class="product-meta">Category: @product.Category</div>
         <div class="product-meta">Price: @product.Price.ToString("C")</div>

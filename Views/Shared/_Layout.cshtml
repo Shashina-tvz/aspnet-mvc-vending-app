@@ -1,18 +1,18 @@
 ﻿@using VendingMachineApp.Data.Repositories
-@inject MockProductRepository productRepo
-@inject MockSupplierRepository supplierRepo
-@inject VendingMachineApp.Data.Repositories.MockVendingMachineRepository machineRepo
-@inject VendingMachineApp.Data.Repositories.MockOrderRepository orderRepo
-@inject VendingMachineApp.Data.Repositories.MockMaintenanceLogRepository logRepo
-@inject VendingMachineApp.Data.Repositories.MockTechnicianRepository techRepo
 
+@inject ProductRepository productRepo
+@inject SupplierRepository supplierRepo
+@inject VendingMachineRepository machineRepo
+@inject OrderRepository orderRepo
+@inject MaintenanceLogRepository logRepo
+@inject TechnicianRepository techRepo
 @{
-    var products = productRepo.GetAll().ToList();
-    var suppliers = supplierRepo.GetAll().ToList();
-   var machines = machineRepo.GetAll().ToList();
-    var orders = orderRepo.GetAll().ToList();
-    var logs = logRepo.GetAll().ToList();
-    var technicians = techRepo.GetAll().ToList();
+    var products = (await productRepo.GetAllAsync()).ToList();
+    var suppliers = (await supplierRepo.GetAllAsync()).ToList();
+    var machines = (await machineRepo.GetAllAsync()).ToList();
+    var orders = (await orderRepo.GetAllAsync()).ToList();
+    var logs = (await logRepo.GetAllAsync()).ToList();
+    var technicians = (await techRepo.GetAllAsync()).ToList();
 }
 
 
@@ -119,6 +119,50 @@
         background: #4fc3f7;
         border-radius: 10px;
     }
+
+    /* BREADCRUMB */
+
+    .breadcrumb-container {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #2e323a;
+    padding-bottom: 0.5rem;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.9rem;
+    }
+
+    /* LINK kao mini button */
+    .breadcrumb a {
+        color: #b0b3b8;
+        text-decoration: none;
+        padding: 4px 10px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+
+    /* HOVER kao sidebar */
+    .breadcrumb a:hover {
+        background: #2e323a;
+        color: #ffffff;
+    }
+
+    /* SEPARATOR */
+    .breadcrumb-separator {
+        color: #555;
+    }
+
+    /* CURRENT PAGE */
+    .breadcrumb span {
+        background: #2e323a;
+        color: #ffffff;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
 </style>
 ```
 
@@ -134,12 +178,14 @@
 
     <!-- PRODUCTS -->
     <div class="nav-item">
-        <a class="nav-link" href="/Product">Products</a>
+        <a class="nav-link" asp-controller="Product" asp-action="Index">Products</a>
 
         <div class="flyout">
             @foreach (var p in products)
             {
-                <a href="/Product/Details/@p.ProductId">@p.Name</a>
+                <a href="/products/info/@p.ProductId">
+                        @p.Name
+                    </a>
             }
         </div>
     </div>

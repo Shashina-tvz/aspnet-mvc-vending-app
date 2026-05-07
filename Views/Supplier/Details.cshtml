@@ -3,47 +3,152 @@
     ViewData["Title"] = "Supplier Details";
     Layout = "../Shared/_Layout.cshtml";
 }
+
 <style>
-    .details-panel {
+    .details-card {
         background: #23272f;
         color: #f3f3f3;
-        border-radius: 14px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-        padding: 2.5rem 2.5rem 2rem 2.5rem;
-        max-width: 540px;
+        border-radius: 16px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        padding: 2rem;
+        max-width: 600px;
         margin: 2rem auto;
     }
-    .details-section { margin-bottom: 1.5rem; }
-    .details-label { color: #b0b3b8; font-size: 0.98rem; margin-bottom: 0.2rem; }
-    .details-value { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.7rem; }
-    .back-link { color: #4fc3f7; text-decoration: none; font-weight: 500; }
-    .back-link:hover { text-decoration: underline; }
+
+    .header {
+        border-bottom: 1px solid #3a3f47;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .supplier-name {
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .badge {
+        display: inline-block;
+        margin-top: 0.3rem;
+        font-size: 0.8rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 8px;
+        background: #4fc3f7;
+        color: #000;
+    }
+
+    .section {
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 0.95rem;
+        color: #b0b3b8;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .item {
+        margin-bottom: 0.4rem;
+        font-size: 1.05rem;
+    }
+
+    .back-link {
+        color: #4fc3f7;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    .email-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    }
+
+    .email-link {
+        color: #4fc3f7;
+        text-decoration: none;
+    }
+
+    .copy-btn {
+        background: #2e3440;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .copy-btn:hover {
+        background: #4fc3f7;
+        color: #000;
+    }
 </style>
-<div class="details-panel">
-    <h2 style="margin-bottom:1.5rem;">Supplier Details</h2>
-    <div class="details-section">
-        <div class="details-label">Name</div>
-        <div class="details-value">@Model.Name</div>
+
+<div class="breadcrumb-container">
+    <div class="breadcrumb">
+        <a href="/Dashboard">Home</a> 
+        <span class="breadcrumb-separator">›</span>
+        <a href="/Supplier">Suppliers</a> 
+        <span class="breadcrumb-separator">›</span>
+        <span>@Model.Name</span>
     </div>
-    <div class="details-section">
-        <div class="details-label">Contact Person</div>
-        <div class="details-value">@Model.ContactPerson</div>
-    </div>
-    <div class="details-section">
-        <div class="details-label">Phone</div>
-        <div class="details-value">@Model.PhoneNumber</div>
-    </div>
-    <div class="details-section">
-        <div class="details-label">Email</div>
-        <div class="details-value">@Model.Email</div>
-    </div>
-    <div class="details-section">
-        <div class="details-label">Address</div>
-        <div class="details-value">@Model.Address</div>
-    </div>
-    <div class="details-section">
-        <div class="details-label">Registration Date</div>
-        <div class="details-value">@Model.RegistrationDate.ToShortDateString()</div>
-    </div>
-    <a class="back-link" href="/Supplier/Index">&#8592; Back to List</a>
 </div>
+
+<div class="details-card">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="supplier-name">@Model.Name</div>
+        <div class="badge">Supplier</div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="section">
+        <div class="section-title">Contact</div>
+        <div class="item">👤 @Model.ContactPerson</div>
+       <div class="item email-row">
+            <span>📧</span>
+
+            <a href="mailto:@Model.Email" class="email-link">
+                @Model.Email
+            </a>
+
+            <button class="copy-btn" onclick="copyEmail('@Model.Email', this)">
+                Copy
+            </button>
+        </div>
+        <div class="item">📞 @Model.PhoneNumber</div>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="section">
+        <div class="section-title">Address</div>
+        <div class="item">📍 @Model.Address</div>
+    </div>
+
+    <!-- META -->
+    <div class="section">
+        <div class="section-title">Details</div>
+        <div class="item">📅 Partner since: @Model.RegistrationDate.ToShortDateString()</div>
+    </div>
+
+    <a class="back-link" href="/Supplier/Index">← Back to Suppliers</a>
+</div>
+
+<script>
+    function copyEmail(email, btn) {
+        navigator.clipboard.writeText(email);
+        btn.innerText = "Copied!";
+        
+        setTimeout(() => {
+            btn.innerText = "Copy";
+        }, 1500);
+    }
+</script>
