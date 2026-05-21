@@ -1,0 +1,89 @@
+@model IEnumerable<VendingMachineApp.Data.Entities.Product>
+
+<style>
+    .plain-link {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .plain-link:hover {
+        opacity: 0.7;
+        text-decoration: underline dotted;
+    }
+</style>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Supplier</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    @foreach (var product in Model)
+    {
+        string categoryClass = product.Category?.ToString().ToLower() switch
+        {
+            "beverage" => "category-beverage",
+            "snack" => "category-snack",
+            "candy" => "category-candy",
+            "mueslibar" => "category-mueslibar",
+            "chips" => "category-chips",
+            "sandwich" => "category-sandwich",
+
+            _ => "category-default"
+        };
+
+        <tr>
+
+            <td>
+                <a href="/products/info/@product.ProductId" class="plain-link">
+                    @product.Name
+                </a>
+            </td>
+
+            <td>
+                <span class="category-badge @categoryClass">
+                    @product.Category
+                </span>
+            </td>
+
+            <td>
+                @product.Price.ToString("C")
+            </td>
+
+            <td>
+                @if (product.Supplier != null)
+                {
+                    <a href="/Supplier/Details/@product.Supplier.SupplierId" class="plain-link">
+                        @product.Supplier.Name
+                    </a>
+                }
+            </td>
+
+            <td class="actions">
+                <a href="/products/info/@product.ProductId" class="btn-icon view">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+
+                <a href="/products/update/@product.ProductId" class="btn-icon edit">
+                    <i class="fa-solid fa-pen"></i>
+                </a>
+
+                <a href="/products/remove/@product.ProductId" class="btn-icon delete">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </td>
+
+        </tr>
+    }
+
+    </tbody>
+
+</table>

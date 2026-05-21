@@ -5,6 +5,7 @@ namespace VendingMachineApp.Data.Entities
     /// 1-N relationship with Product
     /// </summary>
     using System.ComponentModel.DataAnnotations;
+    using VendingMachineApp.Data.Validation;
     public class Supplier
     {
         
@@ -15,9 +16,11 @@ namespace VendingMachineApp.Data.Entities
         public string Name { get; set; } = string.Empty;
         [Required]
         [MaxLength(20)]
+        [PhoneNumber]
         public string PhoneNumber { get; set; } = string.Empty;
         [Required]
         [MaxLength(100)]
+        [Email]
         public string Email { get; set; } = string.Empty;
         [Required]
         [MaxLength(200)]

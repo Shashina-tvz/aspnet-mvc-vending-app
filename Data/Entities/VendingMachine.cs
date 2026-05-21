@@ -22,7 +22,7 @@ namespace VendingMachineApp.Data.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal CurrentBalance { get; set; }
         // Navigation Properties
-        public virtual ICollection<ProductSlot>? ProductSlots { get; set; } = new List<ProductSlot>();
+        public virtual ICollection<ProductSlot> ProductSlots { get; set; } = new List<ProductSlot>();
         public virtual ICollection<Transaction>? Transactions { get; set; } = new List<Transaction>();
         public virtual ICollection<MaintenanceLog>? MaintenanceLogs { get; set; } = new List<MaintenanceLog>();
     }

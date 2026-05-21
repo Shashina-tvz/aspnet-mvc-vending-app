@@ -6,6 +6,7 @@ namespace VendingMachineApp.Data.Entities
     /// </summary>
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using VendingMachineApp.Data.Validation;
     public class Transaction
     {
         
@@ -21,6 +22,7 @@ namespace VendingMachineApp.Data.Entities
         public TransactionStatus Status { get; set; }
         [MaxLength(200)]
         public string? ErrorMessage { get; set; }
+        [GreaterThanZero]
         public int QuantityDispensed { get; set; }
         // Foreign Keys
         [Required]

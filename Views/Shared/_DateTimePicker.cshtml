@@ -1,0 +1,13 @@
+@model DateTime?
+
+<div class="datetime-wrapper">
+    <input type="text"
+           class="datetime-picker dark-input"
+           value="@(Model.HasValue ? Model.Value.ToString("dd.MM.yyyy HH:mm") : "")"
+           autocomplete="off" />
+
+    <!-- hidden input koji se bind-a na model -->
+    <input type="hidden"
+           class="datetime-value"
+           value="@(Model.HasValue ? Model.Value.ToString("O") : "")" />
+</div>

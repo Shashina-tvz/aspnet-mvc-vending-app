@@ -1,2 +1,377 @@
-<h2>Edit Product</h2>
-<p>Work in progress</p>
+@model VendingMachineApp.Data.Entities.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+    Layout = "../Shared/_Layout.cshtml";
+
+    var suppliers = ViewBag.Suppliers as List<SelectListItem>;
+}
+
+<div class="form-card">
+    <div class="form-content">
+
+        <h2>Edit Product</h2>
+
+        <form asp-controller="Product"
+              asp-action="Edit"
+              method="post"
+              autocomplete="off">
+
+            <input type="hidden" asp-for="ProductId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- TAB HEADER -->
+
+            <div class="tab-header">
+
+                <button type="button"
+                        class="tab-btn active"
+                        data-tab="basic">
+                    Basic Info
+                </button>
+
+                <button type="button"
+                        class="tab-btn"
+                        data-tab="inventory">
+                    Inventory & Pricing
+                </button>
+
+                <button type="button"
+                        class="tab-btn"
+                        data-tab="dates">
+                    Dates
+                </button>
+
+                <button type="button"
+                        class="tab-btn"
+                        data-tab="supplier">
+                    Supplier Info
+                </button>
+
+            </div>
+
+            <!-- BASIC -->
+
+            <div class="tab-section show" id="tab-basic">
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label asp-for="Name"
+                               class="section-header"></label>
+
+                        <input asp-for="Name"
+                               class="dark-input" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label asp-for="Category"
+                               class="section-header"></label>
+
+                        <select asp-for="Category"
+                                class="dark-input"
+                                asp-items="Html.GetEnumSelectList<VendingMachineApp.Data.Entities.ProductCategory>()">
+                        </select>
+
+                        <span asp-validation-for="Category"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- INVENTORY -->
+
+            <div class="tab-section" id="tab-inventory">
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label asp-for="Price"
+                               class="section-header"></label>
+
+                        <input asp-for="Price"
+                               class="dark-input"
+                               type="number"
+                               step="0.01"
+                               min="0" />
+
+                        <span asp-validation-for="Price"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label asp-for="ReorderThreshold"
+                               class="section-header"></label>
+
+                        <input asp-for="ReorderThreshold"
+                               class="dark-input"
+                               type="number"
+                               min="0" />
+
+                        <span asp-validation-for="ReorderThreshold"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label asp-for="Description"
+                               class="section-header"></label>
+
+                        <textarea asp-for="Description"
+                                  class="dark-input"
+                                  rows="3"
+                                  maxlength="500"></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- DATES -->
+
+            <div class="tab-section" id="tab-dates">
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label asp-for="ManufactureDate"
+                               class="section-header"></label>
+
+                         <partial name="_DateTimePicker" model="Model.ManufactureDate" />
+
+                        <span asp-validation-for="ManufactureDate"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="form-field">
+
+                        <label asp-for="ExpirationDate"
+                               class="section-header"></label>
+
+                        <partial name="_DateTimePicker" model="Model.ExpirationDate" />
+
+                        <span asp-validation-for="ExpirationDate"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SUPPLIER -->
+
+            <div class="tab-section" id="tab-supplier">
+
+                <div class="form-row">
+
+                    <div class="form-field">
+
+                        <label asp-for="SupplierId"
+                               class="section-header"></label>
+
+                        <select asp-for="SupplierId"
+                                class="dark-input"
+                                asp-items="ViewBag.Suppliers">
+                        </select>
+
+                        <span asp-validation-for="SupplierId"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+
+            <div class="form-row form-actions">
+
+                <button type="submit"
+                        class="btn-custom warning">
+                    Save Changes
+                </button>
+
+                <a href="/products/all"
+                   class="btn-custom secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+}
+
+<style>
+
+    .form-card {
+        background: #23272f;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px #000a;
+        margin: 2.5rem auto;
+        max-width: 800px;
+        padding: 2.5rem;
+    }
+
+    .form-content h2 {
+        margin-bottom: 2rem;
+    }
+
+    .tab-header {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 1.05rem;
+        padding: 0.7rem 1.4rem;
+        border-radius: 10px 10px 0 0;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .tab-btn.active {
+        background: #181a20;
+        color: #4fc3f7;
+        font-weight: 600;
+    }
+
+    .tab-section {
+        display: none;
+    }
+
+    .tab-section.show {
+        display: block;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .form-field {
+        flex: 1 1 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .section-header {
+        color: #9ca3af;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .dark-input {
+        background: #181a20;
+        color: #f3f3f3;
+        border: 1px solid #2e323a;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+
+    .dark-input:focus {
+        border-color: #4fc3f7;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(79,195,247,0.2);
+    }
+
+    .form-actions {
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    .btn-custom {
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-custom.warning {
+        background: #eab308;
+        color: #111827;
+    }
+
+    .btn-custom.warning:hover {
+        background: #facc15;
+    }
+
+    .btn-custom.secondary {
+        background: #374151;
+        color: white;
+    }
+
+    .btn-custom.secondary:hover {
+        background: #4b5563;
+    }
+
+</style>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        const tabSections = document.querySelectorAll(".tab-section");
+
+        tabBtns.forEach(btn => {
+
+            btn.addEventListener("click", function () {
+
+                tabBtns.forEach(b => b.classList.remove("active"));
+                tabSections.forEach(s => s.classList.remove("show"));
+
+                btn.classList.add("active");
+
+                document
+                    .getElementById("tab-" + btn.dataset.tab)
+                    .classList.add("show");
+
+            });
+
+        });
+
+    });
+
+</script>

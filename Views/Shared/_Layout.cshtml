@@ -22,7 +22,8 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - VendingMachineApp</title>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 ```
 
 <style>
@@ -257,6 +258,40 @@
     @RenderBody()
 </div>
 ```
+
+<!-- DateTime Picker (Flatpickr) -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".datetime-wrapper").forEach(wrapper => {
+
+        let input = wrapper.querySelector(".datetime-picker");
+        let hidden = wrapper.querySelector(".datetime-value");
+
+        let fp = flatpickr(input, {
+            enableTime: true,
+            dateFormat: "d.m.Y H:i",
+            time_24hr: true,
+
+            onChange: function (selectedDates) {
+                if (selectedDates.length > 0) {
+                    hidden.value = selectedDates[0].toISOString();
+                }
+            }
+        });
+
+        // 🔥 EDIT MODE FIX (prefill)
+        if (hidden.value) {
+            fp.setDate(new Date(hidden.value));
+        }
+    });
+
+});
+</script>
+
+@RenderSection("Scripts", required: false)
 
 </body>
 </html>

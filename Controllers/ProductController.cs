@@ -1,45 +1,80 @@
 using Microsoft.AspNetCore.Mvc;
-using VendingMachineApp.Data.Entities;
-using VendingMachineApp.Data.Repositories;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using VendingMachineApp.Data;
+using VendingMachineApp.Data.Entities;
 
 namespace VendingMachineApp.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly ProductRepository _productRepo;
-        private readonly SupplierRepository _supplierRepo;
+        private readonly AppDbContext _context;
 
-        public ProductController(ProductRepository productRepo, SupplierRepository supplierRepo)
+        public ProductController(AppDbContext context)
         {
-            _productRepo = productRepo;
-            _supplierRepo = supplierRepo;
+            _context = context;
         }
 
         [Route("products/all")]
         public async Task<IActionResult> Index(ProductCategory? category)
         {
-            var products = category.HasValue
-                ? await _productRepo.GetByCategoryAsync(category.Value)
-                : await _productRepo.GetAllAsync();
+            var products = await _context.Products
+                .Include(p => p.Supplier)
+                .ToListAsync();
             return View(products);
+        }
+
+        // GET: Products/Search - AJAX search endpoint
+        [HttpGet]
+        public async Task<IActionResult> Search(string term)
+        {
+            var query = _context.Products
+                .Include(p => p.Supplier)
+                .AsQueryable();
+
+            var products = await query.ToListAsync();
+
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                term = term.ToLower();
+
+                products = products.Where(p =>
+                    p.Name.ToLower().Contains(term) ||
+                    p.Supplier!.Name.ToLower().Contains(term) ||
+                    (p.Category.HasValue &&
+                    p.Category.Value.ToString().ToLower().Contains(term))
+                ).ToList();
+            }
+
+            return PartialView("_ProductTable", products);
         }
 
         [Route("products/info/{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            var product = await _productRepo.GetByIdAsync(id);
-            if (product == null) return NotFound();
-            product.Supplier = await _supplierRepo.GetByIdAsync(product.SupplierId);
+            var product = await _context.Products
+                .Include(p => p.Supplier)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
             return View(product);
         }
 
         
         [Route("products/new")]
-        public IActionResult Create()
+        // CREATE GET
+        public async Task<IActionResult> Create()
         {
-            return View();
+            ViewBag.Suppliers = new SelectList(
+                await _context.Suppliers.ToListAsync(),
+                "SupplierId",
+                "Name");
+
+            return View(new Product());;
         }
 
         [HttpPost]
@@ -47,51 +82,156 @@ namespace VendingMachineApp.Controllers
         [Route("products/new")]
         public async Task<IActionResult> Create(Product product)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _productRepo.AddAsync(product);
-                return RedirectToAction(nameof(Index));
+                ViewBag.Suppliers = new SelectList(
+                    await _context.Suppliers.ToListAsync(),
+                    "SupplierId",
+                    "Name");
+
+                return View(product);
             }
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return Redirect("/products/all");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SupplierAutocomplete(string term)
+        {
+            var query = _context.Suppliers.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                term = term.ToLower();
+
+                query = query.Where(s =>
+                    s.Name.ToLower().Contains(term));
+            }
+
+            var results = await query
+                .Select(s => new
+                {
+                    id = s.SupplierId,
+                    name = s.Name
+                })
+                .Take(10)
+                .ToListAsync();
+
+            return Json(results);
+        }
+
+       [HttpGet]
+        public IActionResult CategoryAutocomplete(string term)
+        {
+            var all = Enum.GetValues(typeof(ProductCategory))
+                .Cast<ProductCategory>()
+                .Select(c => new
+                {
+                    id = (int)c,
+                    name = c.ToString()!
+                })
+                .ToList();
+
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                term = term.ToLower();
+
+                all = all.Where(c =>
+                    c.name.ToLower().Contains(term))
+                    .ToList();
+            }
+
+            return Json(all.Take(10));
+        }
+
+
+        [Route("products/update/{id}")]
+         // EDIT GET
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Suppliers = new SelectList(
+                await _context.Suppliers.ToListAsync(),
+                "SupplierId",
+                "Name",
+                product.SupplierId);
+
             return View(product);
         }
 
-        [Route("products/update/{id}")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var product = await _productRepo.GetByIdAsync(id);
-            if (product == null) return NotFound();
-            return View(product);
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("products/update/{id}")]
-        public async Task<IActionResult> Edit(int id, Product product)
+        //POST EDIT
+          public async Task<IActionResult> Edit(int id, Product product)
         {
-            if (id != product.ProductId) return NotFound();
-            if (ModelState.IsValid)
+            if (id != product.ProductId)
             {
-                await _productRepo.UpdateAsync(product);
-                return RedirectToAction(nameof(Index));
+                return BadRequest();
             }
-            return View(product);
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Suppliers = new SelectList(
+                    await _context.Suppliers.ToListAsync(),
+                    "SupplierId",
+                    "Name",
+                    product.SupplierId);
+
+                return View(product);
+            }
+
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+
+            return Redirect("/products/all");;
         }
 
         [Route("products/remove/{id}")]
+        // DELETE GET
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _productRepo.GetByIdAsync(id);
-            if (product == null) return NotFound();
+            var product = await _context.Products
+                .Include(p => p.Supplier)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
             return View(product);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Route("products/remove/{id}")]
+        // POST DELETE
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _productRepo.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return Redirect("/products/all");
         }
     }
 }

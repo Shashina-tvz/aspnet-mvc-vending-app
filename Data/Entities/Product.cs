@@ -6,26 +6,42 @@ namespace VendingMachineApp.Data.Entities
     /// </summary>
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using VendingMachineApp.Data.Validation;
     public class Product
     {
         [Key]
         public int ProductId { get; set; }
-        [Required]
-        [MaxLength(100)]
+
+        [Required(ErrorMessage = "Product name is required.")]
+        [MaxLength(100, ErrorMessage = "Name can't exceed 100 characters.")]
         public string Name { get; set; } = string.Empty;
+
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-        [Required]
-        public ProductCategory Category { get; set; }
-        [MaxLength(500)]
+
+        [Required(ErrorMessage = "Product category is required.")]
+        public ProductCategory? Category { get; set; }
+
+        [MaxLength(500, ErrorMessage = "Description can't exceed 500 characters.")]
         public string Description { get; set; } = string.Empty;
-        public int ReorderThreshold { get; set; }
+
+        [Required(ErrorMessage = "Reorder threshold is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Reorder threshold must be greater than 0.")]
+        public int? ReorderThreshold { get; set; }
+
+        [Required(ErrorMessage = "Manufacture date is required.")]
         public DateTime ManufactureDate { get; set; }
+
+        [Required(ErrorMessage = "Expiration date is required.")]
+        [ExpirationAfterManufacture("ManufactureDate")]
         public DateTime ExpirationDate { get; set; }
+        [ExpirationAfterManufacture("ManufactureDate")]
+
+
         // Foreign Key
         [ForeignKey("Supplier")]
-        [Required]
-        public int SupplierId { get; set; }
+        [Required(ErrorMessage = "Please select a supplier.")]        
+        public int? SupplierId { get; set; }
         // Navigation Properties
         public virtual Supplier? Supplier { get; set; }
         public virtual ICollection<ProductSlot>? ProductSlots { get; set; } = new List<ProductSlot>();

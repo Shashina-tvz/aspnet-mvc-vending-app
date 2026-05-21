@@ -1,3 +1,21 @@
+/* Crveni okvir za polja sa greškom */
+.dark-input {
+  border: 1px solid #2e323a;
+}
+
+.dark-input.input-validation-error {
+  border: 2px solid #dc3545 !important;
+}
+
+.dark-input.input-validation-error:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.35);
+}
+
+select.input-validation-error {
+  border: 2px solid #dc3545 !important;
+}
+
 html {
   font-size: 14px;
 }
@@ -8,8 +26,14 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow:
+    0 0 0 0.1rem white,
+    0 0 0 0.25rem #258cfb;
 }
 
 html {

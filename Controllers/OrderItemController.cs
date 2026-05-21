@@ -1,31 +1,74 @@
 using Microsoft.AspNetCore.Mvc;
 using VendingMachineApp.Data.Entities;
-using VendingMachineApp.Data.Repositories;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using VendingMachineApp.Data;
+
 
 namespace VendingMachineApp.Controllers
 {
     public class OrderItemController : Controller
     {
-        private readonly MockOrderItemRepository _orderItemRepo;
+        private readonly AppDbContext _context;
 
-        public OrderItemController(MockOrderItemRepository orderItemRepo)
+        public OrderItemController(AppDbContext context)
         {
-            _orderItemRepo = orderItemRepo;
+            _context = context;
         }
 
-        public IActionResult Index()
+        // ADD ITEM (GET)
+        public async Task<IActionResult> Add(int orderId)
         {
-            var items = _orderItemRepo.GetAll();
-            return View(items);
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null)
+                return NotFound();
+
+            ViewBag.Products = await _context.Products.ToListAsync();
+
+            return View(order);
         }
 
-        public IActionResult Details(int id)
+        // ADD ITEM (POST)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(int orderId, int productId, int quantity)
         {
-            var item = _orderItemRepo.GetById(id);
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null)
+                return NotFound();
+
+            var item = new OrderItem
+            {
+                OrderId = orderId,
+                ProductId = productId,
+                Quantity = quantity
+            };
+
+            _context.OrderItems.Add(item);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Order", new { id = orderId });
+        }
+
+        // REMOVE ITEM
+        public async Task<IActionResult> Remove(int id)
+        {
+            var item = await _context.OrderItems.FindAsync(id);
+
             if (item == null)
                 return NotFound();
-            return View(item);
+
+            int orderId = item.OrderId;
+
+            _context.OrderItems.Remove(item);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Order", new { id = orderId });
         }
     }
 }

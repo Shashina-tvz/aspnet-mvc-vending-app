@@ -5,6 +5,7 @@ namespace VendingMachineApp.Data.Entities
     /// 1-N relationship with MaintenanceLog
     /// </summary>
     using System.ComponentModel.DataAnnotations;
+    using VendingMachineApp.Data.Validation;
     public class Technician
     {
         
@@ -18,9 +19,11 @@ namespace VendingMachineApp.Data.Entities
         public string LicenseNumber { get; set; } = string.Empty;
         [Required]
         [MaxLength(100)]
+        [Email]
         public string Email { get; set; } = string.Empty;
         [Required]
         [MaxLength(20)]
+        [PhoneNumber]
         public string PhoneNumber { get; set; } = string.Empty;
         public DateTime HireDate { get; set; }
         // Navigation Properties

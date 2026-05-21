@@ -1,1 +1,108 @@
-<p>Work in progress</p>
+@model VendingMachineApp.Data.Entities.Product
+@{
+    ViewData["Title"] = "Delete Product";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div class="card form-card">
+    <div class="card-body">
+        <h2 class="card-title mb-3 text-danger">Delete Product</h2>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="ProductId" />
+
+            <div class="tab-header">
+                <button type="button" class="tab-btn active" data-tab="basic">Basic Info</button>
+                <button type="button" class="tab-btn" data-tab="inventory">Inventory & Pricing</button>
+                <button type="button" class="tab-btn" data-tab="dates">Dates</button>
+                <button type="button" class="tab-btn" data-tab="supplier">Supplier Info</button>
+            </div>
+            <div class="tab-section show" id="tab-basic">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="section-header">Name</label>
+                        <div class="dark-input readonly">@Model.Name</div>
+                    </div>
+                    <div class="form-field">
+                        <label class="section-header">Category</label>
+                        <div class="dark-input readonly">@Model.Category</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-section" id="tab-inventory">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="section-header">Price</label>
+                        <div class="dark-input readonly">@Model.Price.ToString("C")</div>
+                    </div>
+                    <div class="form-field">
+                        <label class="section-header">Reorder Threshold</label>
+                        <div class="dark-input readonly">@Model.ReorderThreshold</div>
+                    </div>
+                    <div class="form-field">
+                        <label class="section-header">Description</label>
+                        <div class="dark-input readonly">@Model.Description</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-section" id="tab-dates">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="section-header">Manufacture Date</label>
+                        <div class="dark-input readonly">@Model.ManufactureDate.ToShortDateString()</div>
+                    </div>
+                    <div class="form-field">
+                        <label class="section-header">Expiration Date</label>
+                        <div class="dark-input readonly">@Model.ExpirationDate.ToShortDateString()</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-section" id="tab-supplier">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="section-header">Supplier</label>
+                        <div class="dark-input readonly">@Model.Supplier?.Name</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row form-actions">
+                <button type="submit" class="btn-custom danger">Delete</button>
+                <a asp-action="Index" class="btn-custom secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-card { background: #23272f; border-radius: 18px; box-shadow: 0 4px 24px #000a; margin: 2.5rem auto; max-width: 800px; padding: 2.5rem 2.5rem 2rem 2.5rem; }
+    .tab-header { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
+    .tab-btn { background: none; border: none; color: #9ca3af; font-size: 1.08rem; padding: 0.7rem 1.5rem; border-radius: 8px 8px 0 0; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .tab-btn.active { color: #dc2626; background: #181a20; font-weight: 600; }
+    .tab-section { display: none; }
+    .tab-section.show { display: block; }
+    .form-row { display: flex; gap: 2.5rem; margin-bottom: 2.2rem; flex-wrap: wrap; }
+    .form-field { flex: 1 1 220px; display: flex; flex-direction: column; gap: 0.5rem; }
+    .dark-input, .readonly { background: #181a20; color: #f3f3f3; border: 1px solid #2e323a; border-radius: 10px; font-size: 1.08rem; padding: 0.7rem 1rem; }
+    .section-header { color: #9ca3af; font-size: 1.08rem; font-weight: 500; }
+    .form-actions { justify-content: flex-end; gap: 1.2rem; }
+    .btn-custom { padding: 0.7rem 2.2rem; border-radius: 8px; font-size: 1.08rem; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s, color 0.2s; text-decoration: none; display: inline-block; }
+    .btn-custom.danger { background: #dc2626; color: #fff; }
+    .btn-custom.danger:hover { background: #b91c1c; }
+    .btn-custom.secondary { background: #374151; color: #fff; }
+    .btn-custom.secondary:hover { background: #4b5563; }
+</style>
+<script>
+    // Simple tab logic without Bootstrap
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabSections = document.querySelectorAll('.tab-section');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabSections.forEach(s => s.classList.remove('show'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('show');
+            });
+        });
+    });
+</script>

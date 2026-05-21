@@ -7,11 +7,13 @@ namespace VendingMachineApp.Data.Entities
     /// </summary>
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using VendingMachineApp.Data.Validation;
     public class Order
     {
         
         [Key]
         public int OrderId { get; set; }
+        [DateNotInFuture]
         public DateTime OrderDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
         [Column(TypeName = "decimal(18,2)")]
@@ -25,6 +27,6 @@ namespace VendingMachineApp.Data.Entities
         public int SupplierId { get; set; }
         // Navigation Properties
         public virtual Supplier? Supplier { get; set; }
-        public virtual ICollection<OrderItem>? OrderItems { get; set; } = new List<OrderItem>();
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }
