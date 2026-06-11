@@ -1,5 +1,7 @@
 @model IEnumerable<VendingMachineApp.Data.Entities.Product>
 
+@using System.Globalization
+
 <style>
     .plain-link {
         color: inherit;
@@ -40,7 +42,7 @@
             _ => "category-default"
         };
 
-        <tr>
+        <tr id="product-@product.ProductId">
 
             <td>
                 <a href="/products/info/@product.ProductId" class="plain-link">
@@ -55,7 +57,7 @@
             </td>
 
             <td>
-                @product.Price.ToString("C")
+                @product.Price.ToString("C", CultureInfo.GetCultureInfo("de-DE"))
             </td>
 
             <td>
@@ -68,17 +70,26 @@
             </td>
 
             <td class="actions">
-                <a href="/products/info/@product.ProductId" class="btn-icon view">
-                    <i class="fa-solid fa-eye"></i>
-                </a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a href="/products/info/@product.ProductId" class="btn-icon view">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                 }
 
-                <a href="/products/update/@product.ProductId" class="btn-icon edit">
-                    <i class="fa-solid fa-pen"></i>
-                </a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                    <a href="/products/update/@product.ProductId" class="btn-icon edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    }
 
-                <a href="/products/remove/@product.ProductId" class="btn-icon delete">
-                    <i class="fa-solid fa-trash"></i>
-                </a>
+                @if (User.IsInRole("Admin"))
+                    {    
+                    <a href="/products/remove/@product.ProductId" class="btn-icon delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                    }
             </td>
 
         </tr>

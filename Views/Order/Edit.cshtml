@@ -1,0 +1,372 @@
+@model VendingMachineApp.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Edit Order";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div class="card form-card">
+<div class="card-body">
+
+<h2 class="card-title mb-3"> Edit Order </h2>
+
+<form asp-action="Edit" method="post" autocomplete="off">
+    <input type="hidden" asp-for="OrderId" />
+
+<div asp-validation-summary="ModelOnly"
+     class="text-danger mb-3">
+</div>
+
+
+<div class="tab-header">
+    <button type="button" class="tab-btn active" data-tab="basic">
+        Order Info
+    </button>
+
+    <button type="button" class="tab-btn" data-tab="dates">
+        Dates & Amount
+    </button>
+    <button type="button"
+        class="tab-btn"
+        data-tab="items">
+    Order Items
+</button>
+</div>
+
+<div class="tab-section show" id="tab-basic">
+
+    <div class="form-row">
+
+        <div class="form-field">
+
+            <label asp-for="SupplierId" class="section-header"></label>
+
+            <input type="text"
+                   id="supplierInput"
+                   class="dark-input"
+                   autocomplete="off"
+                   placeholder="Start typing supplier..." 
+                   value="@Model.Supplier?.Name" />
+
+            <input type="hidden"
+                   asp-for="SupplierId"
+                   id="supplierId" />
+
+            <ul id="supplierSuggestions"></ul>
+
+            <span asp-validation-for="SupplierId"
+                  class="text-danger"></span>
+
+             <label asp-for="Status"
+           class="section-header"></label>
+
+    <select asp-for="Status"
+            class="dark-input">
+
+        <option value="Pending">Pending</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancelled">Cancelled</option>
+
+    </select>
+
+    <span asp-validation-for="Status"
+          class="text-danger"></span>      
+
+        </div>
+
+     
+
+    </div>
+
+</div>
+
+<div class="tab-section" id="tab-dates">
+
+    <div class="form-row">
+
+        <div class="form-field">
+
+            <label asp-for="OrderDate"
+                   class="section-header"></label>
+
+            <date-time asp-for="OrderDate"></date-time>
+
+            <span asp-validation-for="OrderDate"
+                  class="text-danger"></span>
+
+        </div>
+
+        <div class="form-field">
+
+            <label asp-for="DeliveryDate"
+                   class="section-header"></label>
+
+            <date-time asp-for="DeliveryDate"></date-time>
+
+            <span asp-validation-for="DeliveryDate"
+                  class="text-danger"></span>
+
+        </div>
+
+    </div>
+
+    <div class="form-row">
+
+        <div class="form-field">
+
+            <label asp-for="TotalAmount"
+                   class="section-header"></label>
+
+            <input asp-for="TotalAmount"
+                   class="dark-input"
+                   type="number"
+                   min="0"
+                   step="0.01" />
+
+            <span asp-validation-for="TotalAmount"
+                  class="text-danger"></span>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="tab-section" id="tab-items">
+
+    <div class="form-row">
+
+        <div class="form-field">
+
+            <label class="section-header">
+                Order Items
+            </label>
+
+            <div class="readonly">
+                Products can be added to an order after the order is created.
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td colspan="2" style="text-align:center;color:#9ca3af;">
+                        No items added yet
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="form-row form-actions">
+
+    <button type="submit"
+            class="btn-custom primary">
+        Save Changes
+    </button>
+
+    <a asp-action="Index"
+       class="btn-custom secondary">
+        Cancel
+    </a>
+
+</div>
+</form>
+</div>
+</div>
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+<style>
+    .form-card { background: #23272f; border-radius: 18px; box-shadow: 0 4px 24px #000a; margin: 2.5rem auto; max-width: 800px; padding: 2.5rem 2.5rem 2rem 2.5rem; }
+    .tab-header { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
+    .tab-btn { background: none; border: none; color: #9ca3af; font-size: 1.08rem; padding: 0.7rem 1.5rem; border-radius: 8px 8px 0 0; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .tab-btn.active { color: #4fc3f7; background: #181a20; font-weight: 600; }
+    .tab-section { display: none; }
+    .tab-section.show { display: block; }
+    .form-row { display: flex; gap: 2.5rem; margin-bottom: 2.2rem; flex-wrap: wrap; }
+    .form-field { flex: 1 1 220px; display: flex; flex-direction: column; gap: 0.5rem; position: relative;}
+    .dark-input, select.dark-input, textarea.dark-input { background: #181a20; color: #f3f3f3; border: 1px solid #2e323a; border-radius: 10px; font-size: 1.08rem; padding: 0.7rem 1rem; }
+    .dark-input.input-validation-error { border: 2px solid #dc3545 !important;}
+    .dark-input:focus { border-color: #4fc3f7; }
+    .section-header { color: #9ca3af; font-size: 1.08rem; font-weight: 500; }
+    .form-actions { justify-content: flex-end; gap: 1.2rem; }
+    .btn-custom { padding: 0.7rem 2.2rem; border-radius: 8px; font-size: 1.08rem; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s, color 0.2s; text-decoration: none; display: inline-block; }
+    .btn-custom.primary { background: #2563eb; color: #fff; }
+    .btn-custom.primary:hover { background: #1d4ed8; }
+    .btn-custom.secondary { background: #374151; color: #fff; }
+    .btn-custom.secondary:hover { background: #4b5563; }
+    .text-danger {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    margin-top: 4px;
+    display: block;
+}
+
+#supplierSuggestions
+ {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: #181a20;
+    border: 1px solid #2e323a;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+}
+
+#supplierSuggestions li
+ {
+    color: white;
+    padding: 10px;
+}
+
+#supplierSuggestions li:hover
+ {
+    background: #2563eb;
+}
+
+/* AUTOCOMPLETE I DATETIME VALIDATION */
+
+.dark-input.invalid-field,
+.datetime-picker.invalid-field {
+  border: 2px solid #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.readonly {
+    background: #181a20;
+    color: #9ca3af;
+    border: 1px solid #2e323a;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+}
+
+</style>
+
+
+<script>
+    // Simple tab logic without Bootstrap
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabSections = document.querySelectorAll('.tab-section');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabSections.forEach(s => s.classList.remove('show'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('show');
+            });
+        });
+    });
+
+    // SUPPLIER AUTOCOMPLETE
+    const supplierInput = document.getElementById("supplierInput");
+    if (supplierInput) {
+        supplierInput.addEventListener("input", function () {
+            let value = this.value;
+            let list = document.getElementById("supplierSuggestions");
+
+            fetch(`/Order/SupplierAutocomplete?term=${value}`)
+                .then(r => r.json())
+                .then(data => {
+                    list.innerHTML = "";
+
+                    if (data.length === 0) {
+                        list.style.display = "none";
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        let li = document.createElement("li");
+                        li.innerText = item.name;
+                        li.style.cursor = "pointer";
+
+                        li.onclick = function () {
+                            document.getElementById("supplierInput").value = item.name;
+                            document.getElementById("supplierId").value = item.id;
+                            list.innerHTML = "";
+                        };
+
+                        list.appendChild(li);
+                    });
+
+                    list.style.display = "block";
+                });
+        });
+
+        // simulate input event so suggestions show on focus
+        supplierInput.addEventListener("focus", function () {
+            this.dispatchEvent(new Event("input"));
+        });
+    }
+
+    document.addEventListener("click", function (e) {
+        const supplierBox = document.getElementById("supplierInput");
+        const supplierList = document.getElementById("supplierSuggestions");
+
+        if (supplierBox && supplierList) {
+            if (!supplierBox.contains(e.target) && !supplierList.contains(e.target)) {
+                supplierList.style.display = "none";
+            }
+        }
+    });
+
+    // Form submit validation: ensure supplier selected and date pickers set
+    document.querySelector("form").addEventListener("submit", function () {
+
+        // SUPPLIER
+        const supplierHidden = document.getElementById("supplierId");
+        const supplierInputEl = document.getElementById("supplierInput");
+        const supplierValidation = supplierInputEl ? supplierInputEl.parentElement.querySelector(".text-danger") : null;
+
+        if (supplierHidden && supplierInputEl && supplierValidation) {
+            if (!supplierHidden.value) {
+                supplierInputEl.classList.add("invalid-field");
+                supplierValidation.textContent = "Please select a supplier.";
+            } else {
+                supplierInputEl.classList.remove("invalid-field");
+                supplierValidation.textContent = "";
+            }
+        }
+
+        // DATETIME PICKERS
+        document.querySelectorAll(".datetime-wrapper").forEach(wrapper => {
+            const hidden = wrapper.querySelector(".datetime-value");
+            const visible = wrapper.querySelector(".datetime-picker");
+
+            if (!hidden.value) {
+                visible.classList.add("invalid-field");
+            } else {
+                visible.classList.remove("invalid-field");
+            }
+        });
+
+    });
+
+</script>

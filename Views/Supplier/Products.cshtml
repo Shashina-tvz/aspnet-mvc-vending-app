@@ -1,0 +1,50 @@
+@model VendingMachineApp.Data.Entities.Supplier
+
+@{
+    ViewData["Title"] = "Supplier Products";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <h2>Products by <span class="highlight">@Model.Name</span></h2>
+    <p class="subtitle">All products supplied by this supplier</p>
+</div>
+
+<div class="card table-card">
+
+    @if (Model.Products == null || !Model.Products.Any())
+    {
+        <div class="empty-state">
+            <i class="fa-solid fa-box-open"></i>
+            <p>No products found for this supplier.</p>
+        </div>
+    }
+    else
+    {
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>
+                        <div class="product-name">
+                            <i class="fa-solid fa-cube"></i>
+                            @p.Name
+                        </div>
+                    </td>
+                    <td>
+                        <span class="price-badge">@p.Price €</span>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

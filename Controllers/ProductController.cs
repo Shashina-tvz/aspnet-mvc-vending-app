@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace VendingMachineApp.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [Route("products/all")]
         public async Task<IActionResult> Index(ProductCategory? category)
         {
@@ -25,7 +27,9 @@ namespace VendingMachineApp.Controllers
         }
 
         // GET: Products/Search - AJAX search endpoint
-        [HttpGet]
+
+        [AllowAnonymous]
+        [HttpGet]        
         public async Task<IActionResult> Search(string term)
         {
             var query = _context.Products
@@ -49,6 +53,7 @@ namespace VendingMachineApp.Controllers
             return PartialView("_ProductTable", products);
         }
 
+        [Authorize]
         [Route("products/info/{id}")]
         public async Task<IActionResult> Details(int id)
         {
@@ -64,7 +69,7 @@ namespace VendingMachineApp.Controllers
             return View(product);
         }
 
-        
+        [Authorize(Roles = "Admin,Manager")]
         [Route("products/new")]
         // CREATE GET
         public async Task<IActionResult> Create()
@@ -74,10 +79,11 @@ namespace VendingMachineApp.Controllers
                 "SupplierId",
                 "Name");
 
-            return View(new Product());;
+            return View(new Product());
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
+        [HttpPost]       
         [ValidateAntiForgeryToken]
         [Route("products/new")]
         public async Task<IActionResult> Create(Product product)
@@ -95,7 +101,7 @@ namespace VendingMachineApp.Controllers
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return Redirect("/products/all");
+            return RedirectToAction("Index", new { highlightId = product.ProductId });
         }
 
         [HttpGet]
@@ -147,7 +153,7 @@ namespace VendingMachineApp.Controllers
             return Json(all.Take(10));
         }
 
-
+        [Authorize(Roles = "Admin,Manager")]
         [Route("products/update/{id}")]
          // EDIT GET
         public async Task<IActionResult> Edit(int id)
@@ -169,8 +175,8 @@ namespace VendingMachineApp.Controllers
             return View(product);
         }
 
-
-        [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
+        [HttpPost]        
         [ValidateAntiForgeryToken]
         [Route("products/update/{id}")]
         //POST EDIT
@@ -198,6 +204,7 @@ namespace VendingMachineApp.Controllers
             return Redirect("/products/all");;
         }
 
+        [Authorize(Roles = "Admin")]
         [Route("products/remove/{id}")]
         // DELETE GET
         public async Task<IActionResult> Delete(int id)
@@ -214,6 +221,7 @@ namespace VendingMachineApp.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Route("products/remove/{id}")]

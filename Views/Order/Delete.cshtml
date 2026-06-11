@@ -1,0 +1,109 @@
+@model VendingMachineApp.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Delete Order";
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<div class="card form-card">
+    <div class="card-body">
+
+        <h2 class="card-title mb-3 text-danger">Delete Order</h2>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="OrderId" />
+
+            <div class="tab-header">
+                <button type="button" class="tab-btn active" data-tab="basic">Order Info</button>
+                <button type="button" class="tab-btn" data-tab="dates">Dates</button>
+                <button type="button" class="tab-btn" data-tab="items">Items</button>
+            </div>
+
+            <!-- BASIC -->
+            <div class="tab-section show" id="tab-basic">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="section-header">Supplier</label>
+                        <div class="dark-input readonly">
+                            @Model.Supplier?.Name
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="section-header">Status</label>
+                        <div class="dark-input readonly">
+                            @Model.Status
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATES -->
+            <div class="tab-section" id="tab-dates">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="section-header">Order Date</label>
+                        <div class="dark-input readonly">
+                            @Model.OrderDate.ToShortDateString()
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="section-header">Delivery Date</label>
+                        <div class="dark-input readonly">
+                            @(Model.DeliveryDate?.ToShortDateString() ?? "-")
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="section-header">Total Amount</label>
+                        <div class="dark-input readonly">
+                            @Model.TotalAmount
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ITEMS -->
+            <div class="tab-section" id="tab-items">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="section-header">Order Items</label>
+
+                        <div class="readonly">
+                            @(Model.OrderItems?.Count ?? 0) items in this order
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row form-actions">
+                <button type="submit" class="btn-custom danger">
+                    Delete
+                </button>
+
+                <a asp-action="Index" class="btn-custom secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabSections = document.querySelectorAll('.tab-section');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabSections.forEach(s => s.classList.remove('show'));
+
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).classList.add('show');
+        });
+    });
+});
+</script>

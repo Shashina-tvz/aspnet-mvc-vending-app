@@ -4,13 +4,43 @@ using VendingMachineApp.Data;
 
 using System.Globalization;
 
+using Microsoft.AspNetCore.Identity;
+using VendingMachineApp.Data.Entities;
+
+using VendingMachineApp.Data.Seed;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
+//Razor Pages
+builder.Services.AddRazorPages();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Identity konfiguracija
+builder.Services.AddDefaultIdentity<AppUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<AppDbContext>();
+
+
+//Google prijava 
+var isTesting = builder.Environment.IsEnvironment("Testing");
+
+if (!isTesting)
+    {
+        builder.Services.AddAuthentication()
+            .AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
+    }
 
 builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<SupplierRepository>();
@@ -29,15 +59,20 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-var culture = new CultureInfo("en-EU"); 
+var culture = new CultureInfo("hr-HR"); 
 
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseHttpsRedirection();
+}
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 
@@ -46,4 +81,14 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=DashBoard}/{action=Index}/{id?}");
 
+//MapRazorPages
+app.MapRazorPages();
+
+using (var scope = app.Services.CreateScope())
+{
+    await RoleSeeder.SeedRoles(scope.ServiceProvider);
+}
+
 app.Run();
+
+public partial class Program { }

@@ -156,7 +156,7 @@
                         <label asp-for="ManufactureDate"
                                class="section-header"></label>
 
-                         <partial name="_DateTimePicker" model="Model.ManufactureDate" />
+                         <date-time asp-for="ManufactureDate" ></date-time>
 
                         <span asp-validation-for="ManufactureDate"
                               class="text-danger"></span>
@@ -168,7 +168,7 @@
                         <label asp-for="ExpirationDate"
                                class="section-header"></label>
 
-                        <partial name="_DateTimePicker" model="Model.ExpirationDate" />
+                        <date-time asp-for="ExpirationDate" ></date-time>
 
                         <span asp-validation-for="ExpirationDate"
                               class="text-danger"></span>

@@ -64,12 +64,12 @@
                 <div class="form-row">
                     <div class="form-field">
                         <label asp-for="ManufactureDate" class="section-header"></label>
-                        <partial name="_DateTimePicker" model="Model.ManufactureDate" />
+                        <date-time asp-for="ManufactureDate" ></date-time>
                         <span asp-validation-for="ManufactureDate" class="text-danger"></span>
                     </div>
                     <div class="form-field">
                         <label asp-for="ExpirationDate" class="section-header"></label>
-                        <partial name="_DateTimePicker" model="Model.ExpirationDate" />
+                        <date-time asp-for="ExpirationDate" ></date-time>
                         <span asp-validation-for="ExpirationDate" class="text-danger"></span>
                     </div>
                 </div>
@@ -160,6 +160,15 @@
 #categorySuggestions li:hover {
     background: #2563eb;
 }
+
+/* AUTOCOMPLETE I DATETIME VALIDATION */
+
+.dark-input.invalid-field,
+.datetime-picker.invalid-field {
+  border: 2px solid #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
 </style>
 <script>
     // Simple tab logic without Bootstrap
@@ -261,5 +270,89 @@ document.getElementById("categoryInput").addEventListener("input", function () {
 document.getElementById("categoryInput").addEventListener("focus", function () {
     this.dispatchEvent(new Event("input"));
 });
-    
+
+document.addEventListener("click", function (e) {
+
+    const supplierBox = document.getElementById("supplierInput");
+    const supplierList = document.getElementById("supplierSuggestions");
+
+    if (!supplierBox.contains(e.target) &&
+        !supplierList.contains(e.target)) {
+
+        supplierList.style.display = "none";
+    }
+
+    const categoryBox = document.getElementById("categoryInput");
+    const categoryList = document.getElementById("categorySuggestions");
+
+    if (!categoryBox.contains(e.target) &&
+        !categoryList.contains(e.target)) {
+
+        categoryList.style.display = "none";
+    }
+
+});
+
+
+
+document.querySelector("form").addEventListener("submit", function () {
+
+    // CATEGORY
+    const categoryHidden = document.getElementById("categoryId");
+    const categoryInput = document.getElementById("categoryInput");
+
+    const categoryValidation =
+    categoryInput.parentElement.querySelector(".text-danger");
+
+if (!categoryHidden.value) {
+
+    categoryInput.classList.add("invalid-field");
+
+    categoryValidation.textContent =
+        "Product category is required.";
+
+} else {
+
+    categoryInput.classList.remove("invalid-field");
+
+    categoryValidation.textContent = "";
+}
+
+    // SUPPLIER
+    const supplierHidden = document.getElementById("supplierId");
+    const supplierInput = document.getElementById("supplierInput");
+
+    const supplierValidation =
+    supplierInput.parentElement.querySelector(".text-danger");
+
+if (!supplierHidden.value) {
+
+    supplierInput.classList.add("invalid-field");
+
+    supplierValidation.textContent =
+        "Please select a supplier.";
+
+} else {
+
+    supplierInput.classList.remove("invalid-field");
+
+    supplierValidation.textContent = "";
+}
+
+    // DATETIME PICKERS
+    document.querySelectorAll(".datetime-wrapper").forEach(wrapper => {
+
+        const hidden = wrapper.querySelector(".datetime-value");
+        const visible = wrapper.querySelector(".datetime-picker");
+
+        if (!hidden.value) {
+            visible.classList.add("invalid-field");
+        } else {
+            visible.classList.remove("invalid-field");
+        }
+    });
+
+});
+
 </script>
+    

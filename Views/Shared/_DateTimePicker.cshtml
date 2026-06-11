@@ -1,5 +1,9 @@
 @model DateTime?
 
+@{
+    var fieldName = ViewData["FieldName"]?.ToString();
+}
+
 <div class="datetime-wrapper">
     <input type="text"
            class="datetime-picker dark-input"
@@ -8,6 +12,7 @@
 
     <!-- hidden input koji se bind-a na model -->
     <input type="hidden"
+           name="@fieldName"
            class="datetime-value"
            value="@(Model.HasValue ? Model.Value.ToString("O") : "")" />
 </div>

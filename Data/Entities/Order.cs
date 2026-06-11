@@ -18,7 +18,7 @@ namespace VendingMachineApp.Data.Entities
         public DateTime? DeliveryDate { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalAmount { get; set; }
-        [Required]
+       
         [MaxLength(50)]
         public string Status { get; set; } = string.Empty;
         // Foreign Key

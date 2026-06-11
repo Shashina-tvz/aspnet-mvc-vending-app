@@ -1,71 +1,13 @@
 @model IEnumerable<VendingMachineApp.Data.Entities.Supplier>
+
 @{
     ViewData["Title"] = "Suppliers";
     Layout = "../Shared/_Layout.cshtml";
+    var highlightId = Context.Request.Query["highlightId"].ToString();
 }
-<style>
-    .page-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        width: 100%;
-    }
-    .card-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
-    .supplier-card {
-        background: #23272f;
-        color: #f3f3f3;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        padding: 1.5rem 2rem;
-        min-width: 260px;
-        max-width: 320px;
-        flex: 1 1 260px;
-        margin-bottom: 1.5rem;
-        transition: box-shadow 0.2s, background 0.2s;
-        cursor: pointer;
-        text-decoration: none;
-        border: 1px solid #2e323a;
-    }
-    .supplier-card:hover {
-        background: #2e323a;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.16);
-        border-color: #3a3f4b;
-    }
-    .supplier-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .supplier-meta { font-size: 0.95rem; color: #b0b3b8; margin-bottom: 0.25rem; }
 
-   .search-wrapper {
-    width: 100%;
-    max-width: 1200px;
-    margin-bottom: 1.5rem;
-    }
 
-    .search-inner {
-        position: relative;
-        width: 100%;
-    }
 
-    .search-input {
-        width: 100%;
-        padding: 10px 14px 10px 38px;
-        border-radius: 8px;
-        border: 1px solid #2e323a;
-        background: #23272f;
-        color: #f3f3f3;
-        outline: none;
-        box-sizing: border-box;
-    }
-
-    .search-icon {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #888;
-        pointer-events: none;
-    }
-</style>
-
-<div class="page-container">
 <div class="breadcrumb-container">
     <div class="breadcrumb">
         <a href="/Dashboard">Home</a>
@@ -73,46 +15,86 @@
         <span>Suppliers</span>
     </div>
 </div>
-<h1>Suppliers</h1>
 
-<form method="get" action="/Supplier" class="search-wrapper">
-
-    <div class="search-inner">
-        <span class="search-icon">🔍</span>
-
-        <input type="text"
-               name="search"
-               placeholder="Name of Supplier"
-               value="@Context.Request.Query["search"]"
-               autocomplete="off"
-               oninput="handleSearch(this)"
-               class="search-input" />
+<div class="page-header">
+    <div class="header-left">
+        <h1>Suppliers</h1>
+        <p class="subtitle">Manage supplier information and contacts</p>
     </div>
 
-</form>
-
-<div class="card-grid">
-@foreach (var supplier in Model)
-{
-    <a class="supplier-card" href="/Supplier/Details/@supplier.SupplierId">
-        <div class="supplier-title">@supplier.Name</div>
-        <div class="supplier-meta">Contact: @supplier.ContactPerson</div>
-        <div class="supplier-meta">Phone: @supplier.PhoneNumber</div>
-        <div class="supplier-meta">Email: @supplier.Email</div>
-    </a>
-}
+    <div class="header-actions">
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <a href="/Supplier/Create" class="btn-icon add">
+                <i class="fa-solid fa-plus"></i>
+            </a>
+        }
+    </div>
 </div>
 
+<div class="table-container">
+
+    <div class="toolbar">
+        <input type="text"
+               id="searchBox"
+               class="search-input"
+               placeholder="Search suppliers, address, email..." />
+    </div>
+
+    <div id="supplierTable">
+        @await Html.PartialAsync("_SupplierTable", Model)
+    </div>
+
 </div>
 
+@section Scripts {
 <script>
-let timer;
+    document.addEventListener("DOMContentLoaded", function () {
 
-function handleSearch(input) {
-    clearTimeout(timer);
+        const searchBox = document.getElementById("searchBox");
+        const tableDiv = document.getElementById("supplierTable");
 
-    timer = setTimeout(() => {
-        input.form.submit();
-    }, 1500);
+        let timeout = null;
+
+        searchBox.addEventListener("keyup", function () {
+
+            clearTimeout(timeout);
+
+            timeout = setTimeout(() => {
+
+                const term = searchBox.value;
+
+                fetch(`/Supplier/Search?term=${encodeURIComponent(term)}`)
+                    .then(r => r.text())
+                    .then(html => {
+                        tableDiv.style.opacity = 0.5;
+                        tableDiv.innerHTML = html;
+                        tableDiv.style.opacity = 1;
+                    })
+                    .catch(err => console.error("Search error:", err));
+
+            }, 300);
+
+        });
+
+        const id = "@highlightId";
+
+if (id) {
+    const row = document.getElementById("supplier-" + id);
+
+    if (row) {
+        row.classList.add("flash-row");
+
+        row.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+        setTimeout(() => {
+    row.classList.remove("flash-row");
+}, 1200);
+    }
 }
+
+    });
 </script>
+}

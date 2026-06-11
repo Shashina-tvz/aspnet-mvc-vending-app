@@ -22,9 +22,11 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - VendingMachineApp</title>
+    <link rel="stylesheet" href="/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-```
+    <link rel="stylesheet" href="/css/form.css" />
+
 
 <style>
     body {
@@ -127,6 +129,9 @@
     margin-bottom: 1.5rem;
     border-bottom: 1px solid #2e323a;
     padding-bottom: 0.5rem;
+    display: flex !important; 
+    justify-content: space-between !important; 
+    align-items: center !important;
     }
 
     .breadcrumb {
@@ -164,14 +169,15 @@
         border-radius: 6px;
         font-weight: 500;
     }
+
+
 </style>
-```
+
 
 </head>
 
 <body>
 
-```
 <div class="sidebar">
     <h2>Vending App</h2>
 
@@ -257,7 +263,21 @@
 <div class="content">
     @RenderBody()
 </div>
-```
+
+<div id="layout-login-buttons" style="display: none;">
+    <div class="d-flex gap-3">
+        <partial name="_LoginPartial" />
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 <!-- DateTime Picker (Flatpickr) -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -265,15 +285,34 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+     // =========================
+    // FLATPICKR INIT
+    // =========================
+
+    const locale = navigator.language || "en";
+
     document.querySelectorAll(".datetime-wrapper").forEach(wrapper => {
 
-        let input = wrapper.querySelector(".datetime-picker");
-        let hidden = wrapper.querySelector(".datetime-value");
+        const input = wrapper.querySelector(".datetime-picker");
+        const hidden = wrapper.querySelector(".datetime-value");
 
-        let fp = flatpickr(input, {
-            enableTime: true,
-            dateFormat: "d.m.Y H:i",
+        if (!input || !hidden) return;
+
+        const fp = flatpickr(input, {
+             enableTime: true,
             time_24hr: true,
+
+            // 🎯 OVO je bit kulture:
+            locale: locale,
+
+            // prikaz korisniku (ovisno o locale-u)
+            altInput: true,
+            altFormat: locale.startsWith("hr")
+                ? "d.m.Y H:i"
+                : "m/d/Y h:i K",
+
+            // stvarni format za backend (uvijek isti!)
+            dateFormat: "Y-m-d H:i:S",
 
             onChange: function (selectedDates) {
                 if (selectedDates.length > 0) {
@@ -284,12 +323,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 🔥 EDIT MODE FIX (prefill)
         if (hidden.value) {
-            fp.setDate(new Date(hidden.value));
+            const date = new Date(hidden.value);
+            if (!isNaN(date)) {
+                fp.setDate(date);
+            }
         }
     });
 
+     // =========================
+    // DEBUG HELP (safe)
+    // =========================
+    console.log("Layout JS initialized successfully");
+
 });
 </script>
+
+
+<!--GUMBI u breadcrumbu-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Pronađi breadcrumb container na trenutnoj stranici
+        var breadcrumbContainer = document.querySelector('.breadcrumb-container');
+        // Pronađi gumbe iz layouta
+        var loginButtons = document.getElementById('layout-login-buttons');
+
+        if (breadcrumbContainer && loginButtons) {
+            // Uzmi gumbe i premjesti ih unutar breadcrumb containera na desnu stranu
+            var buttonsContent = loginButtons.firstElementChild;
+            breadcrumbContainer.appendChild(buttonsContent);
+        }
+    });
+</script>
+
+
 
 @RenderSection("Scripts", required: false)
 

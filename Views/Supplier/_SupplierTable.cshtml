@@ -1,0 +1,78 @@
+@model IEnumerable<VendingMachineApp.Data.Entities.Supplier>
+
+<style>
+    .plain-link {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .plain-link:hover {
+        opacity: 0.7;
+        text-decoration: underline dotted;
+    }
+    .email-badge {
+        background: #2563eb;
+        color: #fff;
+        border-radius: 8px;
+        padding: 0.25rem 0.7rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+    .actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+</style>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var supplier in Model)
+    {
+        <tr id="supplier-@supplier.SupplierId">
+            <td>
+                <a href="/Supplier/Products/@supplier.SupplierId" class="plain-link">
+                    @supplier.Name
+                </a>
+            </td>
+            <td>@supplier.Address</td>
+            <td><span class="email-badge">@supplier.Email</span></td>
+            <td>@supplier.PhoneNumber</td>
+            <td class="actions">
+                @if (User.Identity.IsAuthenticated)
+                {
+                   <a href="/Supplier/Details/@supplier.SupplierId" class="btn-icon view" title="Details">
+                     <i class="fa-solid fa-eye"></i>
+                  </a>
+                }
+
+                
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    {
+                        <a href="/Supplier/Edit/@supplier.SupplierId" class="btn-icon edit" title="Edit">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                    }
+
+                 @if (User.IsInRole("Admin"))
+                    {    
+                        <a href="/Supplier/Delete/@supplier.SupplierId" class="btn-icon delete" title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
